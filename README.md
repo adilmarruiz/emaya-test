@@ -4,7 +4,7 @@ User management system with authentication, audit logging, and password history 
 
 ---
 
-## 🚀 Requisitos
+## 🚀 Requirements
 
 - PHP 8.2+
 - Composer
@@ -13,7 +13,7 @@ User management system with authentication, audit logging, and password history 
 
 ---
 
-## ⚙️ Instalación
+## ⚙️ Installation
 
 ```bash
 git clone https://github.com/adilmarruiz/emaya-test
@@ -25,42 +25,90 @@ php artisan key:generate
 php artisan migrate
 php artisan db:seed
 php artisan serve
+```
 
-POST /api/login
-- Parámetros requeridos:
-  - email
-  - password
-- Retorna: Token de autenticación
+---
 
-POST /api/logout
-- Requiere: Token de autenticación
-- Retorna: Mensaje de confirmación
+# API Endpoints
 
-# List users
-GET /api/users
-- Returns: Paginated list of users
-- Optional filters:
-  - name
-  - email
+## Authentication
 
-# Get specific user
-GET /api/users/{id}
-- Returns: User data
+### Login  
+**POST /api/login**  
+Authenticates a user and generates an access token.
 
-# Create user
-POST /api/users
-- Parameters:
-  - name (required, string, max:255)
-  - email (required, email, unique)
-  - password (required, string, min:6)
-  - phone_number (optional, string, max:20)
-- Returns: Created user
+- **Required parameters:**
+  - `email` (string)
+  - `password` (string)
+- **Returns:** Authentication token
 
-# Update user
-PUT /api/users/{id}
-- Parameters: (same as create)
-- Returns: Updated user
+### Logout  
+**POST /api/logout**  
+Invalidates the current authentication token.
 
-# Delete user
-DELETE /api/users/{id}
-- Returns: Confirmation message
+- **Requires:** Authentication token
+- **Returns:** Confirmation message
+
+---
+
+## Users
+
+### List Users  
+**GET /api/users**  
+Retrieves a paginated list of users.
+
+- **Returns:** Paginated user list
+- **Optional filters:**
+  - `name` (string)
+  - `email` (string)
+
+### Get Specific User  
+**GET /api/users/{id}**  
+Retrieves data for a specific user.
+
+- **Returns:** User data
+
+### Create User  
+**POST /api/users**  
+Creates a new user.
+
+- **Parameters:**
+  - `name` (required, string, max:255)
+  - `email` (required, email, unique)
+  - `password` (required, string, min:6)
+  - `phone_number` (optional, string, max:20)
+- **Returns:** Created user
+
+### Update User  
+**PUT /api/users/{id}**  
+Updates an existing user's data.
+
+- **Parameters:** (same as create)
+- **Returns:** Updated user
+
+### Delete User  
+**DELETE /api/users/{id}**  
+Removes a user from the system.
+
+- **Returns:** Confirmation message
+
+---
+
+## Audit Logs
+
+### List Logs  
+**GET /api/audit-logs**  
+Retrieves system audit logs.
+
+- **Requires:** Authentication token
+- **Returns:** Paginated log list
+- **Optional filters:**
+  - `user_id` (integer): Filter by user ID
+
+**Log Entry Structure:**
+- User ID
+- HTTP Method
+- Full URL
+- IP Address
+- User Agent
+- Payload (excluding sensitive data)
